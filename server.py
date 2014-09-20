@@ -1,13 +1,18 @@
+import sys
 from sim import Sim
 from robot import Robot
 from controller import *
+
+if len(sys.argv) != 2:
+    print 'Usage:', sys.argv[0],'server_port'
+    sys.exit(0)
 
 # Create a simulation
 s = Sim()
 # Create a robot 50cm above the ground
 r = Robot(s, (0.0, 0.5, 0.0))
 # Create a controller
-c = PeriodCtrl(s,r)
+c = UDPCtrlServer(s, r, sys.argv[1])
 # Start the simulation
 s.start()
 

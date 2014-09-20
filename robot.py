@@ -198,31 +198,31 @@ class Robot:
     def getRightAnkleTilt(self):
         return -self.rightLeg.ankleTiltServo.readAngle()
     def setTargets(self, targets):
-        self.lhipRollServo.setTarget(targets[0])
-        self.rhipRollServo.setTarget(targets[1])
-        self.lhipTiltServo.setTarget(targets[2])
-        self.rhipTiltServo.setTarget(targets[3])
-        self.lhipYawServo.setTarget(targets[4])
-        self.rhipYawServo.setTarget(targets[5])
-        self.leftLeg.kneeServo.setTarget(targets[6])
-        self.leftLeg.kneeServo.setTarget(targets[7])
-        self.leftLeg.ankleRollServo.setTarget(targets[8])
-        self.rightLeg.ankleRollServo.setTarget(targets[9])
-        self.leftLeg.ankleTiltServo.setTarget(targets[10])
-        self.rightLeg.ankleTiltServo.setTarget(targets[11])
+        self.setLeftHipRoll(targets[0]) 
+        self.setRightHipRoll(targets[1]) 
+        self.setLeftHipTilt(targets[2]) 
+        self.setRightHipTilt(targets[3]) 
+        self.setLeftHipYaw(targets[4]) 
+        self.setRightHipYaw(targets[5]) 
+        self.setLeftKnee(targets[6]) 
+        self.setRightKnee(targets[7]) 
+        self.setLeftAnkleRoll(targets[8]) 
+        self.setRightAnkleRoll(targets[9]) 
+        self.setLeftAnkleTilt(targets[10]) 
+        self.setRightAnkleTilt(targets[11]) 
     def readAngles(self):
-        return [self.lhipRollServo.readAngle(),\
-                self.rhipRollServo.readAngle(),\
-                self.lhipTiltServo.readAngle(),\
-                self.rhipTiltServo.readAngle(),\
-                self.lhipYawServo.readAngle(),\
-                self.rhipYawServo.readAngle(),\
-                self.leftLeg.kneeServo.readAngle(),\
-                self.leftLeg.kneeServo.readAngle(),\
-                self.leftLeg.ankleRollServo.readAngle(),\
-                self.rightLeg.ankleRollServo.readAngle(),\
-                self.leftLeg.ankleTiltServo.readAngle(),\
-                self.rightLeg.ankleTiltServo.readAngle()]
+        return [self.getLeftHipRoll(),\
+                self.getRightHipRoll(),\
+                self.getLeftHipTilt(),\
+                self.getRightHipTilt(),\
+                self.getLeftHipYaw(),\
+                self.getRightHipYaw(),\
+                self.getLeftKnee(),\
+                self.getRightKnee(),\
+                self.getLeftAnkleRoll(),\
+                self.getRightAnkleRoll(),\
+                self.getLeftAnkleTilt(),\
+                self.getRightAnkleTilt()]
 
 class Leg:
     def __init__(self, sim, pos, right=1.0):

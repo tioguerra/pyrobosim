@@ -26,7 +26,7 @@ TRUNK_JPOS = (0.0, 0.0, 0.0)
 # Gravity
 GRAVITY = (0, -9.81, 0)
 ERP = 0.8 # make this as large as possible
-CFM = 0.001 # make this as small as possible
+CFM = 0.00001 # make this as small as possible
 BOUNCE = 0.1
 MU = 10.0
 
@@ -37,18 +37,23 @@ FLOOR_IMAGE = 'images/floor.jpg'
 ROBOT_IMAGE = 'images/rough.jpg'
 
 # Torque in N.m
-MAX_KNEE_TORQUE = 100.0
-MAX_ANKLE_TORQUE = 100.0
-MAX_HIP_TORQUE = 100.0
+MAX_KNEE_TORQUE = 50.0
+MAX_ANKLE_TORQUE = 50.0
+MAX_HIP_TORQUE = 50.0
 
 EPS = 2e-52 # http://www.mathworks.com/help/techdoc/ref/eps.html
 
 FRAMERATE = 50.0
 TIME_STEP = 0.001
 
-HIPROLL_PID = 25.0, 2.5, 1.5
-HIPTILT_PID = 25.0, 2.5, 1.5
-HIPYAW_PID = 15.0, 1.5, 0.25
-KNEE_PID = 25.0, 2.5, 1.5
-ANKLE_PID = 15.0, 1.5, 0.25
+#HIPROLL_PID = 25.0, 2.5, 1.5
+#HIPTILT_PID = 25.0, 2.5, 1.5
+#HIPYAW_PID = 15.0, 1.5, 0.25
+#KNEE_PID = 25.0, 2.5, 1.5
+#ANKLE_PID = 15.0, 1.5, 0.25
 
+HIPROLL_PID = 25.0, 15.0, 1.5
+HIPTILT_PID = 25.0, 15.0, 1.5
+HIPYAW_PID = 15.0, 2.5, 0.50
+KNEE_PID = 20.0, 10.0, 0.50
+ANKLE_PID = 15.0, 10.0, 0.25
