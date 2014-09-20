@@ -1,0 +1,13 @@
+
+  To-do list:
+ -=-=-=-=-=-=-
+
+   * Add IMU sensor to the robot
+
+   * Add joint limits
+
+   * Find a way to separate separate base
+     classes in a different file in order
+     to add different robot models
+
+
