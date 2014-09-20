@@ -2,7 +2,7 @@
 # simulation
 
 # Density in kg/m3
-DENSITY = 500
+DENSITY = 500 # wood
 
 # All lengths in meters
 LEG_GAP = 0.180
@@ -43,7 +43,7 @@ MAX_HIP_TORQUE = 100.0
 
 EPS = 2e-52 # http://www.mathworks.com/help/techdoc/ref/eps.html
 
-FRAMERATE = 60.0
+FRAMERATE = 50.0
 TIME_STEP = 0.001
 
 HIPROLL_PID = 25.0, 2.5, 1.5
@@ -51,3 +51,4 @@ HIPTILT_PID = 25.0, 2.5, 1.5
 HIPYAW_PID = 15.0, 1.5, 0.25
 KNEE_PID = 25.0, 2.5, 1.5
 ANKLE_PID = 15.0, 1.5, 0.25
+

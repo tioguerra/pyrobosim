@@ -1,13 +1,27 @@
-from math import pi
+from math import *
+from sim import Controller
 
-class Controller:
+class PeriodCtrl(Controller):
     def __init__(self, sim, robot):
-        self.sim = sim
-        self.robot = robot
-        self.state = 0
-        self.sim.addController(self)
+        self.phi = 0.0
+        self.phiStep = 2.0*pi / 200.0
         self.lastTime = 0
-    def update(self,timeStep):
+        super(PeriodCtrl,self).__init__(sim, robot)
+    def updatePh(self,timeStep):
+        time = int(self.sim.time*100)
+        if (time != self.lastTime):
+            self.robot.setLeftHipTilt(pi/6*sin(self.phi)+pi/4)
+            self.robot.setLeftKnee(-pi/6*sin(self.phi)-pi/4)
+            self.phi = self.phi + self.phiStep
+            if self.phi > pi:
+                self.phi = self.phi - 2*pi
+            self.lastTime = time
+
+class TestCtrl(Controller):
+    def __init__(self, sim, robot):
+        self.lastTime = 0
+        super(TestCtrl,self).__init__(sim, robot)
+    def updatePh(self,timeStep):
         time = int(self.sim.time*200)
         if (time % 200 == 0 and time != self.lastTime):
             if self.state == 0:

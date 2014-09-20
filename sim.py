@@ -82,7 +82,7 @@ class Sim:
         self.camera.SetPosition(self.cameraOffset)
         self.camera.SetFocalPoint(self.cameraPos)
         self.interactor.Initialize()
-        self.interactor.AddObserver('TimerEvent', self.execute)
+        self.interactor.AddObserver('TimerEvent', self.updateViPh)
         self.timerId = self.interactor.CreateRepeatingTimer(int(PERIOD*1000))
         self.window.Render()
         self.interactor.Start()
@@ -104,24 +104,24 @@ class Sim:
         roll = self.camera.GetRoll()
         e = self.cameraRoll - roll
         self.camera.SetRoll(roll + 0.05*e)
-    def step(self, timeStep=0.0001):
+    def updatePh(self, timeStep=0.0001):
         # Update robot controllers
         for robot in self.robots:
-            robot.update(timeStep)
+            robot.updatePh(timeStep)
         for controller in self.controllers:
-            controller.update(timeStep)
+            controller.updatePh(timeStep)
         # Simulation step (physics only)
         self.space.collide((self.world, self.jointGroup), near_callback)
         self.world.step(timeStep)
         self.jointGroup.empty()
         self.time = self.time + timeStep
-    def execute(self, obj, event):
+    def updateViPh(self, obj, event):
         # Called every frame this includes
         # physics simulation and visualization
         for i in range(STEPS_PER_FRAME):
-            self.step(TIME_STEP)
+            self.updatePh(TIME_STEP)
         for b in self.bodies:
-            b.update()
+            b.updateVi()
         if len(self.robots) > 0:
             self.adjustCamera(self.robots[0].getPosition())
         self.window.Render()
@@ -144,4 +144,13 @@ def near_callback(args, geom1, geom2):
         c.setMu(MU)
         j = ode.ContactJoint(world, contactgroup, c)
         j.attach(body1, body2)
+
+class Controller(object):
+    def __init__(self, sim, robot):
+        self.sim = sim
+        self.robot = robot
+        self.state = 0
+        self.sim.addController(self)
+    def updatePh(self,timeStep):
+        pass
 

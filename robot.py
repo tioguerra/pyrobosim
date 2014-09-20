@@ -138,15 +138,15 @@ class Robot:
         self.rhipYawServo = ServoPID(self.rhipYawMotor, self.rhipYaw)
         self.rhipYawServo.setGains(HIPYAW_PID)
         self.rhipYawServo.setMaxTorque(MAX_HIP_TORQUE)
-    def update(self, timeStep):
-        self.rightLeg.update(timeStep)
-        self.leftLeg.update(timeStep)
-        self.lhipTiltServo.update(timeStep)
-        self.rhipTiltServo.update(timeStep)
-        self.lhipRollServo.update(timeStep)
-        self.rhipRollServo.update(timeStep)
-        self.lhipYawServo.update(timeStep)
-        self.rhipYawServo.update(timeStep)
+    def updatePh(self, timeStep):
+        self.rightLeg.updatePh(timeStep)
+        self.leftLeg.updatePh(timeStep)
+        self.lhipTiltServo.updatePh(timeStep)
+        self.rhipTiltServo.updatePh(timeStep)
+        self.lhipRollServo.updatePh(timeStep)
+        self.rhipRollServo.updatePh(timeStep)
+        self.lhipYawServo.updatePh(timeStep)
+        self.rhipYawServo.updatePh(timeStep)
     def getPosition(self):
         return self.trunk.body.getPosition()
     def setLeftHipRoll(self,target):
@@ -304,10 +304,10 @@ class Leg:
         self.kneeServo = ServoPID(self.kneeMotor, self.knee)
         self.kneeServo.setGains(KNEE_PID)
         self.kneeServo.setMaxTorque(MAX_KNEE_TORQUE)
-    def update(self, timeStep):
-        self.ankleTiltServo.update(timeStep)
-        self.ankleRollServo.update(timeStep)
-        self.kneeServo.update(timeStep)
+    def updatePh(self, timeStep):
+        self.ankleTiltServo.updatePh(timeStep)
+        self.ankleRollServo.updatePh(timeStep)
+        self.kneeServo.updatePh(timeStep)
         #print '%+04.0f %+04.0f' % (self.ankleTilt.getAngle()*180/pi, self.ankleRoll.getAngle()*180/pi)
 
 class Link:
@@ -337,16 +337,15 @@ class Link:
         transform.Scale(1.0,1.0,1.0)
         self.texture.SetTransform(transform)
         self.texture.SetInput(self.reader.GetOutput())
-        #self.map = vtk.vtkTextureMapToPlane()
-        #self.map.SetInput(self.cube.GetOutput())
         self.mapper = vtk.vtkPolyDataMapper()
         self.mapper.SetInput(self.cube.GetOutput())
         self.actor = vtk.vtkActor()
         self.actor.SetMapper(self.mapper)
         self.actor.SetTexture(self.texture)
         sim.renderer.AddActor(self.actor)
+        # Self-include in the bodies for visualization
         sim.bodies.append(self)
-    def update(self):
+    def updateVi(self):
         # Called to update position and orientation
         # on the screen
         rot = self.body.getRotation()
@@ -357,6 +356,7 @@ class Link:
 class ServoPID:
     def __init__(self, motor, joint):
         self.motor = motor
+        #self.motor.setParam(ode.ParamFudgeFactor,0.5)
         self.joint = joint
         self.target = 0.0
         self.error = 0.0
@@ -377,7 +377,7 @@ class ServoPID:
         self.target = target
     def readAngle(self):
         return self.joint.getAngle()
-    def update(self, timeStep):
+    def updatePh(self, timeStep):
         x = self.joint.getAngle()
         self.error = self.target - x
         self.error_delta = (self.error - self.error_before) / timeStep
