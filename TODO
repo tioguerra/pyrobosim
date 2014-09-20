@@ -2,7 +2,7 @@
   To-do list:
  -=-=-=-=-=-=-
 
-   * Add IMU sensor to the robot
+   * Add IMU sensor to the robot -- DONE!
 
    * Add joint limits
 
@@ -10,4 +10,7 @@
      classes in a different file in order
      to add different robot models
 
+   * Add suport to dictionary key:value style
+     in setting target values to servomotors
+     setpoints
 

@@ -210,7 +210,9 @@ class Robot:
         self.setRightAnkleRoll(targets[9]) 
         self.setLeftAnkleTilt(targets[10]) 
         self.setRightAnkleTilt(targets[11]) 
-    def readAngles(self):
+    def readIMU(self):
+        return self.trunk.readIMU()
+    def readSensors(self):
         return [self.getLeftHipRoll(),\
                 self.getRightHipRoll(),\
                 self.getLeftHipTilt(),\
@@ -222,7 +224,8 @@ class Robot:
                 self.getLeftAnkleRoll(),\
                 self.getRightAnkleRoll(),\
                 self.getLeftAnkleTilt(),\
-                self.getRightAnkleTilt()]
+                self.getRightAnkleTilt(),\
+                self.readIMU()]
 
 class Leg:
     def __init__(self, sim, pos, right=1.0):
@@ -345,6 +348,8 @@ class Link:
         sim.renderer.AddActor(self.actor)
         # Self-include in the bodies for visualization
         sim.bodies.append(self)
+    def readIMU(self):
+        return self.body.vectorFromWorld((0,-1,0))
     def updateVi(self):
         # Called to update position and orientation
         # on the screen

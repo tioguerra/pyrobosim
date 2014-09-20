@@ -10,9 +10,6 @@ allGroups = []
 PERIOD = 1.0 / FRAMERATE
 STEPS_PER_FRAME = max(int(PERIOD / TIME_STEP),1)
 
-print "Period:",PERIOD
-print "Steps per frame:", STEPS_PER_FRAME
-
 # Main simulation class
 class Sim:
     def __init__(self):

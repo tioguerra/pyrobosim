@@ -20,7 +20,7 @@ class UDPCtrlServer(Controller):
             targets = json.loads(data)
             self.robot.setTargets(targets)
             # Returns the joint angles to the client
-            return_msg = json.dumps(self.robot.readAngles())
+            return_msg = json.dumps(self.robot.readSensors())
             self.socket.sendto(return_msg, client_addr)
         except socket.error:
             pass
