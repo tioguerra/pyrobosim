@@ -1,0 +1,28 @@
+
+  Dependencies
+-=-=-=-=-=-=-=-=-
+
+  This simulator is written in Python 2.7.x and it depends on:
+
+    * ODE with Python bindings: http://www.ode.org/
+    * VTK with Python bindings: http://www.vtk.org/
+
+  To ensure you can run this simulator, please open Python in
+  a terminal and try the following commands:
+
+      import ode
+      import vtk
+
+
+  Example Usage
+-=-=-=-=-=-=-=-=-
+
+   (1) Start the server in a terminal
+
+       python main.py 8888
+
+   (2) Start the client in another terminal:
+
+       python client.py 127.0.0.1 8888 8889
+
+
