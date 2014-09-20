@@ -19,7 +19,7 @@
 
    (1) Start the server in a terminal
 
-       python main.py 8888
+       python server.py 8888
 
    (2) Start the client in another terminal:
 
