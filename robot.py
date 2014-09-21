@@ -3,16 +3,10 @@ import vtk
 from sim import *
 from dims import *
 from math import *
+from util import *
 
-def rotpos_to_vtkMatrix4x4(r,p):
-    m = vtk.vtkMatrix4x4()
-    m.DeepCopy((r[0], r[1], r[2], p[0],\
-                r[3], r[4], r[5], p[1],\
-                r[6], r[7], r[8], p[2],\
-                0.0,  0.0,  0.0, 1.0))
-    return m
-
-class Robot:
+# This class creates a biped robot
+class BipedRobot:
     def __init__(self, sim, pos):
         global allGroups
         x, y, z = pos
@@ -20,8 +14,8 @@ class Robot:
         self.sim = sim
         self.sim.addRobot(self)
         # Create the legs
-        self.rightLeg = Leg(sim,(x, y, z), 1.0)
-        self.leftLeg = Leg(sim,(x, y, z), -1.0)
+        self.rightLeg = BipedLeg(sim,(x, y, z), 1.0)
+        self.leftLeg = BipedLeg(sim,(x, y, z), -1.0)
         # Create the trunk
         self.trunk = Link(sim,\
             (x+TRUNK_JPOS[0],\
@@ -227,7 +221,7 @@ class Robot:
                 self.getRightAnkleTilt(),\
                 self.readIMU()]
 
-class Leg:
+class BipedLeg:
     def __init__(self, sim, pos, right=1.0):
         global allGroups
         x, y, z = pos
