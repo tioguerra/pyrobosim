@@ -1,6 +1,6 @@
 import sys
 from sim import Sim
-from robot import BipedRobot
+from robot import BipedRobot, QuadrupedRobot
 from controller import *
 
 if len(sys.argv) != 2:
@@ -10,7 +10,7 @@ if len(sys.argv) != 2:
 # Create a simulation
 s = Sim()
 # Create a robot 50cm above the ground
-r = BipedRobot(s, (0.0, 0.5, 0.0))
+r = QuadrupedRobot(s, (0.0, 1.75, 0.0))
 # Create a controller
 c = UDPCtrlServer(s, r, sys.argv[1])
 # Start the simulation

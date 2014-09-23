@@ -6,6 +6,250 @@ from math import *
 from util import *
 
 # This class creates a biped robot
+class QuadrupedRobot:
+    def __init__(self, sim, pos):
+        global allGroups
+        x, y, z = pos
+        # Connect robot to simulation and vice-versa
+        self.sim = sim
+        self.sim.addRobot(self)
+        # Create the legs
+        self.frontRightLeg = QuadrupedLeg(sim,(x, y, z+QTRUNK_LZ/2-QULEG_LZ/2), 1.0)
+        self.frontLeftLeg = QuadrupedLeg(sim,(x, y, z+QTRUNK_LZ/2-QULEG_LZ/2), -1.0)
+        self.backRightLeg = QuadrupedLeg(sim,(x, y, z-QTRUNK_LZ/2+QULEG_LZ/2), 1.0)
+        self.backLeftLeg = QuadrupedLeg(sim,(x, y, z-QTRUNK_LZ/2+QULEG_LZ/2), -1.0)
+        # Create the trunk
+        self.trunk = Link(sim,\
+            (x,y,z),\
+            (QTRUNK_LX, QTRUNK_LY, QTRUNK_LZ),\
+            DENSITY)
+        # Create front left hip joints
+        self.flhipPosition = (x-QTRUNK_LX/2,y,z+QTRUNK_LZ/2)
+        self.flhipJointBody1 = ode.Body(sim.world) # intermediate massless body
+        self.nullMass1 = ode.Mass(sim.world)
+        self.nullMass1.setBox(0.01, 0.01, 0.01, 0.01)
+        self.flhipJointBody1.setMass(self.nullMass1)
+        self.flhipRoll = ode.HingeJoint(sim.world) # roll
+        self.flhipRoll.attach(self.frontLeftLeg.uleg.body, self.flhipJointBody1)
+        self.flhipRoll.setAnchor(self.flhipPosition)
+        self.flhipRoll.setAxis((0,0,1))
+        self.flhipYaw = ode.HingeJoint(sim.world) # yaw
+        self.flhipYaw.attach(self.flhipJointBody1, self.trunk.body)
+        self.flhipYaw.setAnchor(self.flhipPosition)
+        self.flhipYaw.setAxis((0,1,0))
+        # Create front right hip joints
+        self.frhipPosition = (x+QTRUNK_LX/2,y,z+QTRUNK_LZ/2)
+        self.frhipJointBody1 = ode.Body(sim.world) # intermediate massless body
+        self.nullMass2 = ode.Mass(sim.world)
+        self.nullMass2.setBox(0.01, 0.01, 0.01, 0.01)
+        self.frhipJointBody1.setMass(self.nullMass2)
+        self.frhipRoll = ode.HingeJoint(sim.world) # roll
+        self.frhipRoll.attach(self.frontRightLeg.uleg.body, self.frhipJointBody1)
+        self.frhipRoll.setAnchor(self.frhipPosition)
+        self.frhipRoll.setAxis((0,0,1))
+        self.frhipYaw = ode.HingeJoint(sim.world) # yaw
+        self.frhipYaw.attach(self.frhipJointBody1, self.trunk.body)
+        self.frhipYaw.setAnchor(self.frhipPosition)
+        self.frhipYaw.setAxis((0,1,0))
+        # Create back left hip joints
+        self.blhipPosition = (x-QTRUNK_LX/2,y,z-QTRUNK_LZ/2)
+        self.blhipJointBody1 = ode.Body(sim.world) # intermediate massless body
+        self.nullMass3 = ode.Mass(sim.world)
+        self.nullMass3.setBox(0.01, 0.01, 0.01, 0.01)
+        self.blhipJointBody1.setMass(self.nullMass3)
+        self.blhipRoll = ode.HingeJoint(sim.world) # roll
+        self.blhipRoll.attach(self.backLeftLeg.uleg.body, self.blhipJointBody1)
+        self.blhipRoll.setAnchor(self.blhipPosition)
+        self.blhipRoll.setAxis((0,0,1))
+        self.blhipYaw = ode.HingeJoint(sim.world) # yaw
+        self.blhipYaw.attach(self.blhipJointBody1, self.trunk.body)
+        self.blhipYaw.setAnchor(self.blhipPosition)
+        self.blhipYaw.setAxis((0,1,0))
+        # Create back right hip joints
+        self.brhipPosition = (x+QTRUNK_LX/2,y,z-QTRUNK_LZ/2)
+        self.brhipJointBody1 = ode.Body(sim.world) # intermediate massless body
+        self.nullMass4 = ode.Mass(sim.world)
+        self.nullMass4.setBox(0.01, 0.01, 0.01, 0.01)
+        self.brhipJointBody1.setMass(self.nullMass4)
+        self.brhipRoll = ode.HingeJoint(sim.world) # roll
+        self.brhipRoll.attach(self.backRightLeg.uleg.body, self.brhipJointBody1)
+        self.brhipRoll.setAnchor(self.brhipPosition)
+        self.brhipRoll.setAxis((0,0,1))
+        self.brhipYaw = ode.HingeJoint(sim.world) # yaw
+        self.brhipYaw.attach(self.brhipJointBody1, self.trunk.body)
+        self.brhipYaw.setAnchor(self.brhipPosition)
+        self.brhipYaw.setAxis((0,1,0))
+        # No touch groups
+        allGroups.append([self.frontLeftLeg.uleg.body,self.trunk.body])
+        allGroups.append([self.frontRightLeg.uleg.body,self.trunk.body])
+        allGroups.append([self.backLeftLeg.uleg.body,self.trunk.body])
+        allGroups.append([self.backRightLeg.uleg.body,self.trunk.body])
+        # Create the front left hip roll motor
+        self.flhipRollMotor = ode.AMotor(sim.world)
+        self.flhipRollMotor.attach(self.frontLeftLeg.uleg.body, self.trunk.body)
+        self.flhipRollMotor.setNumAxes(1)
+        self.flhipRollMotor.setAxis(0,1,(0,0,1))
+        self.flhipRollMotor.enable()
+        self.flhipRollServo = ServoPID(self.flhipRollMotor, self.flhipRoll)
+        self.flhipRollServo.setGains(QHIPROLL_PID)
+        self.flhipRollServo.setMaxTorque(QMAX_HIP_TORQUE)
+        # Create the front right hip roll motor
+        self.frhipRollMotor = ode.AMotor(sim.world)
+        self.frhipRollMotor.attach(self.frontRightLeg.uleg.body, self.trunk.body)
+        self.frhipRollMotor.setNumAxes(1)
+        self.frhipRollMotor.setAxis(0,1,(0,0,1))
+        self.frhipRollMotor.enable()
+        self.frhipRollServo = ServoPID(self.frhipRollMotor, self.frhipRoll)
+        self.frhipRollServo.setGains(QHIPROLL_PID)
+        self.frhipRollServo.setMaxTorque(QMAX_HIP_TORQUE)
+        # Create the back left hip roll motor
+        self.blhipRollMotor = ode.AMotor(sim.world)
+        self.blhipRollMotor.attach(self.backLeftLeg.uleg.body, self.trunk.body)
+        self.blhipRollMotor.setNumAxes(1)
+        self.blhipRollMotor.setAxis(0,1,(0,0,1))
+        self.blhipRollMotor.enable()
+        self.blhipRollServo = ServoPID(self.blhipRollMotor, self.blhipRoll)
+        self.blhipRollServo.setGains(QHIPROLL_PID)
+        self.blhipRollServo.setMaxTorque(QMAX_HIP_TORQUE)
+        # Create the back right hip roll motor
+        self.brhipRollMotor = ode.AMotor(sim.world)
+        self.brhipRollMotor.attach(self.backRightLeg.uleg.body, self.trunk.body)
+        self.brhipRollMotor.setNumAxes(1)
+        self.brhipRollMotor.setAxis(0,1,(0,0,1))
+        self.brhipRollMotor.enable()
+        self.brhipRollServo = ServoPID(self.brhipRollMotor, self.brhipRoll)
+        self.brhipRollServo.setGains(QHIPROLL_PID)
+        self.brhipRollServo.setMaxTorque(QMAX_HIP_TORQUE)
+        # Create the front left hip yaw motor
+        self.flhipYawMotor = ode.AMotor(sim.world)
+        self.flhipYawMotor.attach(self.frontLeftLeg.uleg.body, self.trunk.body)
+        self.flhipYawMotor.setNumAxes(1)
+        self.flhipYawMotor.setAxis(0,1,(0,1,0))
+        self.flhipYawMotor.enable()
+        self.flhipYawServo = ServoPID(self.flhipYawMotor, self.flhipYaw)
+        self.flhipYawServo.setGains(QHIPYAW_PID)
+        self.flhipYawServo.setMaxTorque(QMAX_HIP_TORQUE)
+        # Create the front right hip yaw motor
+        self.frhipYawMotor = ode.AMotor(sim.world)
+        self.frhipYawMotor.attach(self.frontRightLeg.uleg.body, self.trunk.body)
+        self.frhipYawMotor.setNumAxes(1)
+        self.frhipYawMotor.setAxis(0,1,(0,1,0))
+        self.frhipYawMotor.enable()
+        self.frhipYawServo = ServoPID(self.frhipYawMotor, self.frhipYaw)
+        self.frhipYawServo.setGains(QHIPYAW_PID)
+        self.frhipYawServo.setMaxTorque(QMAX_HIP_TORQUE)
+        # Create the back left hip yaw motor
+        self.blhipYawMotor = ode.AMotor(sim.world)
+        self.blhipYawMotor.attach(self.backLeftLeg.uleg.body, self.trunk.body)
+        self.blhipYawMotor.setNumAxes(1)
+        self.blhipYawMotor.setAxis(0,1,(0,1,0))
+        self.blhipYawMotor.enable()
+        self.blhipYawServo = ServoPID(self.blhipYawMotor, self.blhipYaw)
+        self.blhipYawServo.setGains(QHIPYAW_PID)
+        self.blhipYawServo.setMaxTorque(QMAX_HIP_TORQUE)
+        # Create the back right hip yaw motor
+        self.brhipYawMotor = ode.AMotor(sim.world)
+        self.brhipYawMotor.attach(self.backRightLeg.uleg.body, self.trunk.body)
+        self.brhipYawMotor.setNumAxes(1)
+        self.brhipYawMotor.setAxis(0,1,(0,1,0))
+        self.brhipYawMotor.enable()
+        self.brhipYawServo = ServoPID(self.brhipYawMotor, self.brhipYaw)
+        self.brhipYawServo.setGains(QHIPYAW_PID)
+        self.brhipYawServo.setMaxTorque(QMAX_HIP_TORQUE)
+    def updatePh(self, timeStep):
+        self.frontRightLeg.updatePh(timeStep)
+        self.frontLeftLeg.updatePh(timeStep)
+        self.backRightLeg.updatePh(timeStep)
+        self.backLeftLeg.updatePh(timeStep)
+        self.flhipRollServo.updatePh(timeStep)
+        self.frhipRollServo.updatePh(timeStep)
+        self.flhipYawServo.updatePh(timeStep)
+        self.frhipYawServo.updatePh(timeStep)
+        self.blhipRollServo.updatePh(timeStep)
+        self.brhipRollServo.updatePh(timeStep)
+        self.blhipYawServo.updatePh(timeStep)
+        self.brhipYawServo.updatePh(timeStep)
+    def getPosition(self):
+        return self.trunk.body.getPosition()
+    def setFrontLeftHipRoll(self,target):
+        self.flhipRollServo.setTarget(-target)
+    def setFrontRightHipRoll(self,target):
+        self.frhipRollServo.setTarget(target)
+    def setBackLeftHipRoll(self,target):
+        self.blhipRollServo.setTarget(-target)
+    def setBackRightHipRoll(self,target):
+        self.brhipRollServo.setTarget(target)
+    def setFrontLeftHipYaw(self,target):
+        self.flhipYawServo.setTarget(-target)
+    def setFrontRightHipYaw(self,target):
+        self.frhipYawServo.setTarget(target)
+    def setBackLeftHipYaw(self,target):
+        self.blhipYawServo.setTarget(-target)
+    def setBackRightHipYaw(self,target):
+        self.brhipYawServo.setTarget(target)
+    def setFrontLeftKnee(self,target):
+        self.frontLeftLeg.kneeServo.setTarget(-target)
+    def setFrontRightKnee(self,target):
+        self.frontRightLeg.kneeServo.setTarget(-target)
+    def setBackLeftKnee(self,target):
+        self.backLeftLeg.kneeServo.setTarget(-target)
+    def setBackRightKnee(self,target):
+        self.backRightLeg.kneeServo.setTarget(-target)
+    def setTargets(self, targets):
+        self.setFrontLeftHipRoll(targets[0])
+        self.setFrontRightHipRoll(targets[1])
+        self.setBackLeftHipRoll(targets[2])
+        self.setBackRightHipRoll(targets[3])
+        self.setFrontLeftHipYaw(targets[4])
+        self.setFrontRightHipYaw(targets[5])
+        self.setBackLeftHipYaw(targets[6])
+        self.setBackRightHipYaw(targets[7])
+        self.setFrontLeftKnee(targets[8])
+        self.setFrontRightKnee(targets[9])
+        self.setBackLeftKnee(targets[10])
+        self.setBackRightKnee(targets[11])
+    def getFrontLeftHipRoll(self):
+        return -self.flhipRollServo.readAngle()
+    def getFrontRightHipRoll(self):
+        return self.frhipRollServo.readAngle()
+    def getBackLeftHipRoll(self):
+        return -self.blhipRollServo.readAngle()
+    def getBackRightHipRoll(self):
+        return self.brhipRollServo.readAngle()
+    def getFrontLeftHipYaw(self):
+        return -self.flhipYawServo.readAngle()
+    def getFrontRightHipYaw(self):
+        return self.frhipYawServo.readAngle()
+    def getBackLeftHipYaw(self):
+        return -self.blhipYawServo.readAngle()
+    def getBackRightHipYaw(self):
+        return self.brhipYawServo.readAngle()
+    def getFrontLeftKnee(self):
+        return -self.frontLeftLeg.kneeServo.readAngle()
+    def getFrontRightKnee(self):
+        return -self.frontRightLeg.kneeServo.readAngle()
+    def getBackLeftKnee(self):
+        return -self.backLeftLeg.kneeServo.readAngle()
+    def getBackRightKnee(self):
+        return -self.backRightLeg.kneeServo.readAngle()
+    def readIMU(self):
+        return self.trunk.readIMU()
+    def readSensors(self):
+        return [self.getFrontLeftHipRoll(),
+                self.getFrontRightHipRoll(),
+                self.getBackLeftHipRoll(),
+                self.getBackRightHipRoll(),
+                self.getFrontLeftHipYaw(),
+                self.getFrontRightHipYaw(),
+                self.getBackLeftHipYaw(),
+                self.getBackRightHipYaw(),
+                self.getFrontLeftKnee(),
+                self.getFrontRightKnee(),
+                self.getBackLeftKnee(),
+                self.getBackRightKnee(),
+                self.readIMU()]
+
+# This class creates a biped robot
 class BipedRobot:
     def __init__(self, sim, pos):
         global allGroups
@@ -221,6 +465,62 @@ class BipedRobot:
                 self.getRightAnkleTilt(),\
                 self.readIMU()]
 
+class QuadrupedLeg:
+    def __init__(self, sim, pos, right):
+        global allGroups
+        x, y, z = pos
+        self.sim = sim
+        # Create the foot
+        self.foot = Link(self.sim,\
+            (x+right*(QTRUNK_LX/2+QULEG_LX),\
+             y-QLLEG_LY-QFOOT_LY/2,\
+             z),\
+            (2*QFOOT_RADIUS, QFOOT_LY, 2*QFOOT_RADIUS),\
+            DENSITY)
+        # Create the lower leg
+        self.lleg = Link(self.sim,\
+            (x+right*(QTRUNK_LX/2+QULEG_LX),\
+             y-QLLEG_LY/2,\
+             z),\
+            (QLLEG_LX, QLLEG_LY, QLLEG_LZ),\
+            DENSITY)
+        # Create the upper leg
+        self.uleg = Link(self.sim,\
+            (x+right*(QTRUNK_LX/2+QULEG_LX/2),\
+             y,\
+             z),\
+            (QULEG_LX, QULEG_LY, QULEG_LZ),\
+            DENSITY)
+        # Create the yaw joint
+        self.anklePosition = (x+right*(QTRUNK_LX/2+QULEG_LX),\
+                              y-QLLEG_LY-QFOOT_LY/2,\
+                              z)
+        self.ankle = ode.HingeJoint(self.sim.world) # ankle yaw joint
+        self.ankle.attach(self.foot.body, self.lleg.body) # foot to lleg
+        self.ankle.setAnchor(self.anklePosition)
+        self.ankle.setAxis((0,1,0))
+        # No collision between foot and lower leg
+        allGroups.append([self.foot.body,self.lleg.body])
+        # Create the knee joint
+        self.kneePosition = (x+right*(QTRUNK_LX/2+QULEG_LX),y,z)
+        self.knee = ode.HingeJoint(self.sim.world)
+        self.knee.attach(self.lleg.body, self.uleg.body)
+        self.knee.setAnchor(self.kneePosition)
+        self.knee.setAxis((0,0,1))
+        # No collision between lower and upper leg
+        allGroups.append([self.lleg.body,self.uleg.body])
+        # Create the knee motors
+        self.kneeMotor = ode.AMotor(self.sim.world)
+        self.kneeMotor.attach(self.lleg.body, self.uleg.body)
+        self.kneeMotor.setNumAxes(1)
+        self.kneeMotor.setAxis(0,1,(0,0,1))
+        self.kneeMotor.enable()
+        self.kneeServo = ServoPID(self.kneeMotor, self.knee)
+        self.kneeServo.setGains(QKNEE_PID)
+        self.kneeServo.setMaxTorque(QMAX_KNEE_TORQUE)
+    def updatePh(self, timeStep):
+        self.kneeServo.updatePh(timeStep)
+
 class BipedLeg:
     def __init__(self, sim, pos, right=1.0):
         global allGroups
@@ -305,7 +605,6 @@ class BipedLeg:
         self.ankleTiltServo.updatePh(timeStep)
         self.ankleRollServo.updatePh(timeStep)
         self.kneeServo.updatePh(timeStep)
-        #print '%+04.0f %+04.0f' % (self.ankleTilt.getAngle()*180/pi, self.ankleRoll.getAngle()*180/pi)
 
 class Link:
     def __init__(self, sim, pos, dims, density):
