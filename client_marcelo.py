@@ -13,12 +13,6 @@ if len(sys.argv) != 4:
 
 c = UDPCtrlClient(sys.argv[1], sys.argv[2], sys.argv[3])
 
-commands = [[   0.0 ,  00.0 ,  0.0 , pi/4 ,0,0,  0.0  , -pi/4 ,0,0,0,0],
-            [   0.0 ,  00.0 , pi/4 ,  0.0 ,0,0, -pi/4 ,  0.0  ,0,0,0,0],
-            [   0.0 ,  00.0 ,  0.0 ,  0.0 ,0,0,  0.0  ,  0.0  ,0,0,0,0],
-            [  pi/6 ,  pi/6 ,  0.0 ,  0.0 ,0,0,  0.0  ,  0.0  ,0,0,0,0]]
-
-
 RightTau = 0.0
 LeftTau = -pi
 TauStep = 2.0*pi / 200.0
