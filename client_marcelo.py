@@ -31,9 +31,10 @@ while True:
     right_hip_yaw, right_hip_roll, right_hip_pitch, right_knee, right_ankle_pitch, right_ankle_roll = \
                               leg.joint_angles(eta, right_roll_leg, right_pitch_leg, right_yaw_leg, right_roll_foot, right_pitch_foot)
 
-    #sends the desired angles to server                         
-    command = [left_hip_roll, right_hip_roll,left_hip_pitch,right_hip_pitch,left_hip_yaw,right_hip_yaw,\
-            -left_knee,-right_knee,left_ankle_roll,right_ankle_roll,left_ankle_pitch,right_ankle_pitch]
+    #sends the desired angles to server 
+    
+    command = [left_hip_roll[0],right_hip_roll[0],left_hip_pitch[0],right_hip_pitch[0],left_hip_yaw,right_hip_yaw,\
+            -left_knee,-right_knee,left_ankle_roll[0],right_ankle_roll[0],left_ankle_pitch[0],right_ankle_pitch[0]]
 
     r = c.sendCommand(command)
     print r
@@ -45,7 +46,7 @@ while True:
         RightTau = RightTau - 2*pi
     if LeftTau > pi:
         LeftTau = LeftTau - 2*pi
-    time.sleep(1)
+    time.sleep(0.01)
 
 while True:
     for command in commands:
