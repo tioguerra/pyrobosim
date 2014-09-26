@@ -10,7 +10,7 @@ if len(sys.argv) != 2:
 # Create a simulation
 s = Sim()
 # Create a robot 50cm above the ground
-r = QuadrupedRobot(s, (0.0, 1.75, 0.0))
+r = BipedRobot(s, (0.0, 0.0, 0.0))
 # Create a controller
 c = UDPCtrlServer(s, r, sys.argv[1])
 # Start the simulation
