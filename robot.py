@@ -7,7 +7,7 @@ from util import *
 
 # This class creates a biped robot
 class QuadrupedRobot:
-    def __init__(self, sim, pos):
+    def __init__(self, sim, pos, fixed=False):
         global allGroups
         x, y, z = pos
         # Connect robot to simulation and vice-versa
@@ -22,7 +22,7 @@ class QuadrupedRobot:
         self.trunk = Link(sim,\
             (x,y,z),\
             (QTRUNK_LX, QTRUNK_LY, QTRUNK_LZ),\
-            DENSITY)
+            DENSITY, fixed)
         # Create front left hip joints
         self.flhipPosition = (x-QTRUNK_LX/2,y,z+QTRUNK_LZ/2)
         self.flhipJointBody1 = ode.Body(sim.world) # intermediate massless body
@@ -251,7 +251,7 @@ class QuadrupedRobot:
 
 # This class creates a biped robot
 class BipedRobot:
-    def __init__(self, sim, pos):
+    def __init__(self, sim, pos, fixed=False):
         global allGroups
         x, y, z = pos
         # Connect robot to simulation and vice-versa
@@ -266,7 +266,7 @@ class BipedRobot:
              y+FOOT_LY+LLEG_LY+ULEG_LY+TRUNK_LY/2.0+TRUNK_JPOS[1],\
              z+TRUNK_JPOS[2]),\
             (TRUNK_LX, TRUNK_LY, TRUNK_LZ),\
-            DENSITY)
+            DENSITY, fixed)
         # Create left hip joints
         self.lhipPosition = (x-1*(FOOT_JPOS[0]+LEG_GAP/2.0),\
                              FOOT_LY+LLEG_LY+ULEG_LY+y,\
@@ -607,7 +607,7 @@ class BipedLeg:
         self.kneeServo.updatePh(timeStep)
 
 class Link:
-    def __init__(self, sim, pos, dims, density):
+    def __init__(self, sim, pos, dims, density, fixed=False):
         # ODE initialization
         x, y, z = pos # initial pos
         lx, ly, lz = dims # dimensions
@@ -619,6 +619,10 @@ class Link:
         self.body.setPosition(pos) # set the initial pos
         self.geom = ode.GeomBox(self.sim.space, lengths=dims) # geometry
         self.geom.setBody(self.body) # link geometry and body
+        if fixed:
+            self.fixedJoint = ode.FixedJoint(self.sim.world)
+            self.fixedJoint.attach(self.body,self.sim.space.getBody())
+            self.fixedJoint.setFixed()
         # VTK initialization
         self.math = vtk.vtkMath()
         self.cube = vtk.vtkCubeSource()
