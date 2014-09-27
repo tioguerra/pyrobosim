@@ -1,15 +1,10 @@
 from math import *
 
-class motion_pattern:
+class MotionPattern:
     def __init__(self,C,C_tau):
 
-        self.C = []
-        self.C_tau = []
-        for i in range(len(C)):
-            self.C.append(C[i])
-
-        for i in range(len(C_tau)):
-            self.C_tau.append(C_tau[i])
+        self.C = list(C)
+        self.C_tau = list(C_tau)
 
         ##-------------Halt Position-------------
     
@@ -32,7 +27,7 @@ class motion_pattern:
 
         ##-------------Leg Swing-----------------
 
-    def Leg_swing(self,tau,Vx,Vy,Vphi,sigma):
+    def leg_swing(self,tau,Vx,Vy,Vphi,sigma):
         if self.C_tau[0] <= tau and self.C_tau[1] > tau:
             gamma = cos((tau - self.C_tau[0])/(self.C_tau[1]-self.C_tau[0])*pi)
         elif self.C_tau[1] <= tau and tau < pi:
@@ -49,7 +44,7 @@ class motion_pattern:
 
         ##------------Lateral Hip Swing---------
 
-    def Hip_swing(self,tau):
+    def hip_swing(self,tau):
         if tau < self.C_tau[0]:
             tau_l = tau - self.C_tau[1] + 2*pi
         elif tau > self.C_tau[1]:
@@ -69,7 +64,7 @@ class motion_pattern:
 
         ##----------------Leaning--------------
 
-    def Leaning(self,Vx,Vphi):
+    def leaning(self,Vx,Vphi):
         if Vx >= 0:
             P_pitch_lean = Vx*self.C[17]
         elif Vx < 0:
@@ -82,9 +77,9 @@ class motion_pattern:
     def final_motion(self,Vx,Vy,Vphi,tau,sigma):
         P_eta_halt, P_LRoll_halt, P_LPitch_halt, P_FRoll_halt, P_FPitch_halt = self.halt_position(sigma)
         P_Leg_lift = self.leg_lifting(tau,Vx,Vy)
-        P_pitch_LSwing, P_roll_LSwing, P_yaw_LSwing = self.Leg_swing(tau,Vx,Vy,Vphi,sigma)
-        P_hip_swing = self.Hip_swing(tau)
-        P_pitch_lean, P_roll_lean = self.Leaning(Vx,Vphi)
+        P_pitch_LSwing, P_roll_LSwing, P_yaw_LSwing = self.leg_swing(tau,Vx,Vy,Vphi,sigma)
+        P_hip_swing = self.hip_swing(tau)
+        P_pitch_lean, P_roll_lean = self.leaning(Vx,Vphi)
 
         eta = P_eta_halt + P_Leg_lift
         theta_roll_leg = P_LRoll_halt + P_hip_swing + P_roll_LSwing + P_roll_lean

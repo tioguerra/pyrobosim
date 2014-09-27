@@ -1,7 +1,7 @@
 from math import *
 from numpy import *
 
-class control_interface:
+class ControlInterface:
     def __init__(self,C):
         self.Vx = 0
         self.Vy = 0
