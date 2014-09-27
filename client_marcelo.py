@@ -2,9 +2,7 @@ import sys
 import time
 from math import *
 from controller import UDPCtrlClient
-from control_interface import control_interface
-from motion_pattern import motion_pattern
-from leg_interface import leg_interface
+from omniwalk import *
 
 
 if len(sys.argv) != 4:
@@ -17,9 +15,9 @@ RightTau = 0.0
 LeftTau = -pi
 TauStep = 2.0*pi / 200.0
 
-control = control_interface([3.5,0.0085,0.01,0.009,0.09,0.008,0])
-motion = motion_pattern([0.02,0.1,0.02,0.03,0,0.02,0,0.3,0.12,0.17,0.12,0.1,0.05,0.015,0.2,0.05,0.035,0,0,-0.07],[0,2.3876])
-leg = leg_interface()
+control = ControlInterface([3.5,0.0085,0.01,0.009,0.09,0.008,0])
+motion = MotionPattern([0.02,0.1,0.02,0.03,0,0.02,0,0.3,0.12,0.17,0.12,0.1,0.05,0.015,0.2,0.05,0.035,0,0,-0.07],[0,2.3876])
+leg = LegInterface()
 
 while True:
     #calculates angles for the left leg
