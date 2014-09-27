@@ -33,8 +33,18 @@ while True:
 
     #sends the desired angles to server 
     
-    command = [left_hip_roll[0],right_hip_roll[0],left_hip_pitch[0],right_hip_pitch[0],left_hip_yaw,right_hip_yaw,\
-            -left_knee,-right_knee,left_ankle_roll[0],right_ankle_roll[0],left_ankle_pitch[0],right_ankle_pitch[0]]
+    command = {'lHipRoll':left_hip_roll[0],\
+               'rHipRoll':right_hip_roll[0],\
+               'lHipTilt':left_hip_pitch[0],\
+               'rHipTilt':right_hip_pitch[0],\
+               'lHipYaw':left_hip_yaw,\
+               'rHipYaw':right_hip_yaw,\
+               'lKnee':-left_knee,\
+               'rKnee':-right_knee,\
+               'lAnkleRoll':left_ankle_roll[0],\
+               'rAnkleRoll':right_ankle_roll[0],\
+               'lAnkleTilt':left_ankle_pitch[0],\
+               'rAnkleTilt':right_ankle_pitch[0]}
 
     r = c.sendCommand(command)
     print r

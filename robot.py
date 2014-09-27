@@ -196,18 +196,30 @@ class QuadrupedRobot:
     def setBackRightKnee(self,target):
         self.backRightLeg.kneeServo.setTarget(-target)
     def setTargets(self, targets):
-        self.setFrontLeftHipRoll(targets[0])
-        self.setFrontRightHipRoll(targets[1])
-        self.setBackLeftHipRoll(targets[2])
-        self.setBackRightHipRoll(targets[3])
-        self.setFrontLeftHipYaw(targets[4])
-        self.setFrontRightHipYaw(targets[5])
-        self.setBackLeftHipYaw(targets[6])
-        self.setBackRightHipYaw(targets[7])
-        self.setFrontLeftKnee(targets[8])
-        self.setFrontRightKnee(targets[9])
-        self.setBackLeftKnee(targets[10])
-        self.setBackRightKnee(targets[11])
+        if 'flHipRoll' in targets:
+            self.setFrontLeftHipRoll(targets['flHipRoll'])
+        if 'frHipRoll' in targets:
+            self.setFrontRightHipRoll(targets['frHipRoll'])
+        if 'blHipRoll' in targets:
+            self.setBackLeftHipRoll(targets['blHipRoll'])
+        if 'brHipRoll' in targets:
+            self.setBackRightHipRoll(targets['brHipRoll'])
+        if 'flHipYaw' in targets:
+            self.setFrontLeftHipYaw(targets['flHipYaw'])
+        if 'frHipYaw' in targets:
+            self.setFrontRightHipYaw(targets['frHipYaw'])
+        if 'blHipYaw' in targets:
+            self.setBackLeftHipYaw(targets['blHipYaw'])
+        if 'brHipYaw' in targets:
+            self.setBackRightHipYaw(targets['brHipYaw'])
+        if 'flKnee' in targets:
+            self.setFrontLeftKnee(targets['flKnee'])
+        if 'frKnee' in targets:
+            self.setFrontRightKnee(targets['frKnee'])
+        if 'blKnee' in targets:
+            self.setBackLeftKnee(targets['blKnee'])
+        if 'brKnee' in targets:
+            self.setBackRightKnee(targets['brKnee'])
     def getFrontLeftHipRoll(self):
         return -self.flhipRollServo.readAngle()
     def getFrontRightHipRoll(self):
@@ -234,20 +246,27 @@ class QuadrupedRobot:
         return -self.backRightLeg.kneeServo.readAngle()
     def readIMU(self):
         return self.trunk.readIMU()
+    def readTiltSensor(self):
+        x,y,z = self.readIMU()
+        return atan2(y,z)
+    def readRollSensor(self):
+        x,y,z = self.readIMU()
+        return atan2(y,x)
     def readSensors(self):
-        return [self.getFrontLeftHipRoll(),
-                self.getFrontRightHipRoll(),
-                self.getBackLeftHipRoll(),
-                self.getBackRightHipRoll(),
-                self.getFrontLeftHipYaw(),
-                self.getFrontRightHipYaw(),
-                self.getBackLeftHipYaw(),
-                self.getBackRightHipYaw(),
-                self.getFrontLeftKnee(),
-                self.getFrontRightKnee(),
-                self.getBackLeftKnee(),
-                self.getBackRightKnee(),
-                self.readIMU()]
+        return {'flHipRoll':self.getFrontLeftHipRoll(),
+                'frHipRoll':self.getFrontRightHipRoll(),
+                'blHipRoll':self.getBackLeftHipRoll(),
+                'brHipRoll':self.getBackRightHipRoll(),
+                'flHipYaw':self.getFrontLeftHipYaw(),
+                'frHipYaw':self.getFrontRightHipYaw(),
+                'blKnee':self.getBackLeftHipYaw(),
+                'brKnee':self.getBackRightHipYaw(),
+                'flKnee':self.getFrontLeftKnee(),
+                'frKnee':self.getFrontRightKnee(),
+                'blKnee':self.getBackLeftKnee(),
+                'brKnee':self.getBackRightKnee(),
+                'tiltSensor':self.readTiltSensor(),
+                'rollSensor':self.readRollSensor()}
 
 # This class creates a biped robot
 class BipedRobot:
@@ -436,34 +455,53 @@ class BipedRobot:
     def getRightAnkleTilt(self):
         return -self.rightLeg.ankleTiltServo.readAngle()
     def setTargets(self, targets):
-        self.setLeftHipRoll(targets[0]) 
-        self.setRightHipRoll(targets[1]) 
-        self.setLeftHipTilt(targets[2]) 
-        self.setRightHipTilt(targets[3]) 
-        self.setLeftHipYaw(targets[4]) 
-        self.setRightHipYaw(targets[5]) 
-        self.setLeftKnee(targets[6]) 
-        self.setRightKnee(targets[7]) 
-        self.setLeftAnkleRoll(targets[8]) 
-        self.setRightAnkleRoll(targets[9]) 
-        self.setLeftAnkleTilt(targets[10]) 
-        self.setRightAnkleTilt(targets[11]) 
+        if 'lHipRoll' in targets:
+            self.setLeftHipRoll(targets['lHipRoll']) 
+        if 'rHipRoll' in targets:
+            self.setRightHipRoll(targets['rHipRoll']) 
+        if 'lHipTilt' in targets:
+            self.setLeftHipTilt(targets['lHipTilt']) 
+        if 'rHipTilt' in targets:
+            self.setRightHipTilt(targets['rHipTilt']) 
+        if 'lHipYaw' in targets:
+            self.setLeftHipYaw(targets['lHipYaw']) 
+        if 'rHipYaw' in targets:
+            self.setRightHipYaw(targets['rHipYaw']) 
+        if 'lKnee' in targets:
+            self.setLeftKnee(targets['lKnee']) 
+        if 'rKnee' in targets:
+            self.setRightKnee(targets['rKnee']) 
+        if 'lAnkleRoll' in targets:
+            self.setLeftAnkleRoll(targets['lAnkleRoll']) 
+        if 'rAnkleRoll' in targets:
+            self.setRightAnkleRoll(targets['rAnkleRoll']) 
+        if 'lAnkleTilt' in targets:
+            self.setLeftAnkleTilt(targets['lAnkleTilt']) 
+        if 'rAnkleTilt' in targets:
+            self.setRightAnkleTilt(targets['rAnkleTilt']) 
     def readIMU(self):
         return self.trunk.readIMU()
+    def readTiltSensor(self):
+        x,y,z = self.readIMU()
+        return atan2(y,z)
+    def readRollSensor(self):
+        x,y,z = self.readIMU()
+        return atan2(y,x)
     def readSensors(self):
-        return [self.getLeftHipRoll(),\
-                self.getRightHipRoll(),\
-                self.getLeftHipTilt(),\
-                self.getRightHipTilt(),\
-                self.getLeftHipYaw(),\
-                self.getRightHipYaw(),\
-                self.getLeftKnee(),\
-                self.getRightKnee(),\
-                self.getLeftAnkleRoll(),\
-                self.getRightAnkleRoll(),\
-                self.getLeftAnkleTilt(),\
-                self.getRightAnkleTilt(),\
-                self.readIMU()]
+        return {'lHipRoll':self.getLeftHipRoll(),\
+                'rHipRoll':self.getRightHipRoll(),\
+                'lHipTilt':self.getLeftHipTilt(),\
+                'rHipTilt':self.getRightHipTilt(),\
+                'lHipYaw':self.getLeftHipYaw(),\
+                'rHipYaw':self.getRightHipYaw(),\
+                'lKnee':self.getLeftKnee(),\
+                'rKnee':self.getRightKnee(),\
+                'lAnkleRoll':self.getLeftAnkleRoll(),\
+                'rAnkleRoll':self.getRightAnkleRoll(),\
+                'lAnkleTilt':self.getLeftAnkleTilt(),\
+                'rAnkleTilt':self.getRightAnkleTilt(),\
+                'tiltSensor':self.readTiltSensor(),\
+                'rollSensor':self.readRollSensor()}
 
 class QuadrupedLeg:
     def __init__(self, sim, pos, right):
