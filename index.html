@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>PyRoboSim by tioguerra</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>PyRoboSim</h1>
+        <p>A simple robot simulator written in Python using ODE for physics and VTK for visualization</p>
+
+        <p class="view"><a href="https://github.com/tioguerra/pyrobosim">View the Project on GitHub <small>tioguerra/pyrobosim</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/tioguerra/pyrobosim/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tioguerra/pyrobosim/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tioguerra/pyrobosim">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>
+<a name="pyrobosim" class="anchor" href="#pyrobosim"><span class="octicon octicon-link"></span></a>PyRoboSim.</h3>
+
+<p>PyRoboSim is a simple robot simulator written in Python. This simulator is not designed for performance, our focus is on easy usage allowing for fast code development specially in educational scenarios.</p>
+
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>To download the simulator, just download the latest development version from GitHub:</p>
+
+<pre><code>$ git clone https://github.com/tioguerra/pyrobosim.git
+</code></pre>
+
+<p>In order to run the simulator you need to make sure you have the necessary dependencies installed. We tried to keep dependencies at a minimum. In order to be able to run this simulator you will need:</p>
+
+<ul>
+<li>A standard installation of Python 2.7.x with NumPy</li>
+<li><a href="http://ode-wiki.org/wiki/index.php?title=Manual:_Install_and_Use#Install_with_Python_bindings">Open Physics Engine compiled with Python bindings</a></li>
+<li><a href="http://www.vtk.org/VTK/resources/software.html">VTK 5.x with its Python bindings</a></li>
+</ul><p>Obs.: Depending on your system it is likely that you will also need to install <a href="http://cython.org/">Cython</a> and maybe some other dependencies.</p>
+
+<p>To test if your system is ready do the following</p>
+
+<pre><code>$ python
+&gt; import ode
+&gt; import vtk
+</code></pre>
+
+<p>If you do not see any error message, then you are ready to go!</p>
+
+<h3>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<ol>
+<li>Start the server in a terminal</li>
+</ol><pre><code>$ python server.py 8888
+</code></pre>
+
+<ol>
+<li>Start the client in another terminal:</li>
+</ol><pre><code>$ python client.py 127.0.0.1 8888 8889
+</code></pre>
+
+<h3>
+<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>This program is being developed by:</p>
+
+<ul>
+<li>Rodrigo da Silva Guerra (<a href="https://github.com/tioguerra" class="user-mention">@tioguerra</a>)</li>
+<li>Marcelo Canaparro</li>
+<li>Leandro Tomé Martins</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/tioguerra">tioguerra</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
