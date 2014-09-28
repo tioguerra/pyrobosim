@@ -483,10 +483,10 @@ class BipedRobot:
         return self.trunk.readIMU()
     def readTiltSensor(self):
         x,y,z = self.readIMU()
-        return atan2(y,z)
+        return (atan2(y,z)+pi/2.0+pi) % (2*pi) - pi
     def readRollSensor(self):
         x,y,z = self.readIMU()
-        return atan2(y,x)
+        return (atan2(y,x)+pi/2.0+pi) % (2*pi) - pi
     def readSensors(self):
         return {'lHipRoll':self.getLeftHipRoll(),\
                 'rHipRoll':self.getRightHipRoll(),\
@@ -500,8 +500,8 @@ class BipedRobot:
                 'rAnkleRoll':self.getRightAnkleRoll(),\
                 'lAnkleTilt':self.getLeftAnkleTilt(),\
                 'rAnkleTilt':self.getRightAnkleTilt(),\
-                'tiltSensor':self.readTiltSensor(),\
-                'rollSensor':self.readRollSensor()}
+                'tilt':self.readTiltSensor(),\
+                'roll':self.readRollSensor()}
 
 class QuadrupedLeg:
     def __init__(self, sim, pos, right):
