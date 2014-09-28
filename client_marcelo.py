@@ -21,10 +21,10 @@ leg = LegInterface()
 
 while True:
     #calculates angles for the left leg
-    angles = motion.final_motion(0.0,0.0,0.0,RightTau,-1)
+    angles = motion.final_motion(0.5,0.0,0.0,RightTau,-1)
     rightJointAngles = leg.joint_angles(angles)
     #calculates angles for the right leg
-    angles = motion.final_motion(0.0,0.0,0.0,LeftTau,1)
+    angles = motion.final_motion(0.5,0.0,0.0,LeftTau,1)
     leftJointAngles = leg.joint_angles(angles)
 
     #sends the desired angles to server 
