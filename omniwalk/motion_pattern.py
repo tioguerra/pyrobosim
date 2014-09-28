@@ -39,13 +39,13 @@ class MotionPattern:
         elif tau > C_tau_1:
             tau_l = tau-C_tau_1
         else:
-            tau_l = 0
+            tau_l = 0.0
         if (tau+pi) < C_tau_0:
             tau_r = tau-C_tau_1+3*pi
         elif (tau+pi) > C_tau_1:
             tau_r = tau-C_tau_1+pi
         else:
-            tau_r = 0
+            tau_r = 0.0
         delta = C_tau_0 - C_tau_1 + 2*pi
         P = {'hipSwing':C17*(sin(tau_l*pi/delta)-sin(tau_r*pi/delta))}
         return P

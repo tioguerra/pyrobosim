@@ -13,12 +13,12 @@ class LegInterface:
         theta = array([[angles['legPitch']],[angles['legRoll']]])
         theta_prime = dot(R,theta)
 
-        lamda = arccos(1 - angles['eta'])
+        lamda = arccos(1.0 - angles['eta'])
         jointAngles = {'hipYaw':angles['legYaw'],\
                        'hipRoll':theta_prime[0][0],\
                        'hipPitch':theta_prime[1][0]-lamda,\
                        'knee':2*lamda,\
                        'anklePitch':angles['footPitch']-theta_prime[0][0]-lamda,\
-                       'ankleRoll':angles['footRoll'] - theta_prime[1][0]}
+                       'ankleRoll':angles['footRoll']-theta_prime[1][0]}
         return jointAngles
 

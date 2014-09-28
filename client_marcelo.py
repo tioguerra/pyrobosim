@@ -21,25 +21,26 @@ leg = LegInterface()
 
 while True:
     #calculates angles for the left leg
-    angles = motion.final_motion(0.0,0.5,0.0,RightTau,-1)
+    angles = motion.final_motion(0.0,0.0,0.0,RightTau,-1)
     rightJointAngles = leg.joint_angles(angles)
     #calculates angles for the right leg
-    angles = motion.final_motion(0.0,0.5,0.0,LeftTau,1)
+    angles = motion.final_motion(0.0,0.0,0.0,LeftTau,1)
     leftJointAngles = leg.joint_angles(angles)
 
     #sends the desired angles to server 
     command = {'lHipRoll':leftJointAngles['hipRoll'],\
                'rHipRoll':rightJointAngles['hipRoll'],\
-               'lHipTilt':leftJointAngles['hipPitch'],\
-               'rHipTilt':rightJointAngles['hipPitch'],\
+               'lHipTilt':-leftJointAngles['hipPitch'],\
+               'rHipTilt':-rightJointAngles['hipPitch'],\
                'lHipYaw':leftJointAngles['hipYaw'],\
                'rHipYaw':rightJointAngles['hipYaw'],\
                'lKnee':-leftJointAngles['knee'],\
                'rKnee':-rightJointAngles['knee'],\
                'lAnkleRoll':leftJointAngles['ankleRoll'],\
                'rAnkleRoll':rightJointAngles['ankleRoll'],\
-               'lAnkleTilt':leftJointAngles['anklePitch'],\
-               'rAnkleTilt':rightJointAngles['anklePitch']}
+               'lAnkleTilt':-leftJointAngles['anklePitch'],\
+               'rAnkleTilt':-rightJointAngles['anklePitch'],\
+               }
 
     r = c.sendCommand(command)
     print r
