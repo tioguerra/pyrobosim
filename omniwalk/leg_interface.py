@@ -4,21 +4,21 @@ from numpy import *
 class LegInterface:
     def __init__(self):
         pass
-    def joint_angles(self, eta, theta_leg_roll, theta_leg_pitch, theta_leg_yaw,theta_foot_roll, theta_foot_pitch):
-        a = cos(-theta_leg_yaw)
-        b = -sin(-theta_leg_yaw)
-        c = sin(-theta_leg_yaw)
-        d = cos(-theta_leg_yaw)
+    def joint_angles(self, angles): #eta, theta_leg_roll, theta_leg_pitch, theta_leg_yaw,theta_foot_roll, theta_foot_pitch):
+        a = cos(-angles['legYaw'])
+        b = -sin(-angles['legYaw'])
+        c = sin(-angles['legYaw'])
+        d = cos(-angles['legYaw'])
         R = array([[a, b], [c, d]])
-        theta = array([[theta_leg_pitch],[theta_leg_roll]])
+        theta = array([[angles['legPitch']],[angles['legRoll']]])
         theta_prime = dot(R,theta)
 
-        lamda = arccos(1 - eta)
-        theta_hip_yaw = theta_leg_yaw
-        theta_hip_roll = theta_prime[0]
-        theta_hip_pitch = theta_prime[1] - lamda
-        theta_knee = 2*lamda
-        theta_ankle_pitch = theta_foot_pitch - theta_prime[0] - lamda
-        theta_ankle_roll = theta_foot_roll - theta_prime[1]
-        return theta_hip_yaw, theta_hip_roll, theta_hip_pitch, theta_knee, theta_ankle_pitch, theta_ankle_roll
+        lamda = arccos(1 - angles['eta'])
+        jointAngles = {'hipYaw':angles['legYaw'],\
+                       'hipRoll':theta_prime[0][0],\
+                       'hipPitch':theta_prime[1][0]-lamda,\
+                       'knee':2*lamda,\
+                       'anklePitch':angles['footPitch']-theta_prime[0][0]-lamda,\
+                       'ankleRoll':angles['footRoll'] - theta_prime[1][0]}
+        return jointAngles
 

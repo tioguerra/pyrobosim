@@ -1,90 +1,74 @@
+from constants import *
 from math import *
 
 class MotionPattern:
-    def __init__(self,C,C_tau):
-
-        self.C = list(C)
-        self.C_tau = list(C_tau)
-
-        ##-------------Halt Position-------------
-    
+    def __init__(self):
+        pass
     def halt_position(self,sigma):
-        P_eta_halt = self.C[0]
-        P_LRoll_halt = sigma * self.C[1]
-        P_LPitch_halt = self.C[2]
-        P_FRoll_halt = self.C[3]
-        P_FPitch_halt = self.C[4]
-        return P_eta_halt, P_LRoll_halt, P_LPitch_halt, P_FRoll_halt, P_FPitch_halt
-
-        ##-------------Leg Liftning--------------
-
+        P = {'etaHalt':C1,\
+             'legRollHalt':sigma*C2,\
+             'legPitchHalt':C3,\
+             'footRollHalt':C4,\
+             'footPitchHalt':C5}
+        return P
     def leg_lifting(self,tau,Vx,Vy):
+        P = {}
         if tau <= 0:
-            P_Leg_lift = sin(tau) * (self.C[5] + self.C[6] * max((abs(Vx),abs(Vy))))
+            P['legLift'] = sin(tau) * (C6 + C7 * max((abs(Vx),abs(Vy))))
         elif tau > 0:
-            P_Leg_lift = sin(tau) * (self.C[7] + self.C[8] * max((abs(Vx),abs(Vy))))
-        return P_Leg_lift
-
-        ##-------------Leg Swing-----------------
-
+            P['legLift'] = sin(tau) * (C8 + C9 * max((abs(Vx),abs(Vy))))
+        return P
     def leg_swing(self,tau,Vx,Vy,Vphi,sigma):
-        if self.C_tau[0] <= tau and self.C_tau[1] > tau:
-            gamma = cos((tau - self.C_tau[0])/(self.C_tau[1]-self.C_tau[0])*pi)
-        elif self.C_tau[1] <= tau and tau < pi:
-            gamma = 2*(tau - self.C_tau[1])/(2*pi - self.C_tau[1] + self.C_tau[0]) - 1
-        elif tau >= -pi and tau < self.C_tau[0]:
-            gamma = 2*(tau + 2*pi - self.C_tau[1])/(2*pi - self.C_tau[1] + self.C_tau[0]) - 1
+        if C_tau_0 <= tau and C_tau_1 > tau:
+            gamma = cos(((tau-C_tau_0)/(C_tau_1-C_tau_0))*pi)
+        elif C_tau_1 <= tau and tau < pi:
+            gamma = 2*(tau-C_tau_1)/(2*pi-C_tau_1+C_tau_0)-1
+        elif tau >= -pi and tau < C_tau_0:
+            gamma = 2*(tau+2*pi-C_tau_1)/(2*pi-C_tau_1+C_tau_0)-1
+        P = {}
         if Vx >= 0:
-            P_pitch_LSwing = gamma*Vx*self.C[9]
+            P['pitchLegSwing'] = gamma*Vx*C10
         elif Vx < 0:
-            P_pitch_LSwing = gamma*Vx*self.C[10]
-        P_roll_LSwing = -gamma*Vy*self.C[11] - sigma*max(self.C[12]*abs(Vx),self.C[13]*abs(Vphi))
-        P_yaw_LSwing = gamma*Vphi*self.C[14] - sigma*self.C[15]*abs(Vphi)
-        return P_pitch_LSwing, P_roll_LSwing, P_yaw_LSwing
-
-        ##------------Lateral Hip Swing---------
-
+            P['pitchLegSwing'] = gamma*Vx*C11
+        P['rollLegSwing'] = -gamma*Vy*C12 - sigma*max(C13*abs(Vx),C14*abs(Vphi))
+        P['yawLegSwing'] = gamma*Vphi*C15 - sigma*C16*abs(Vphi)
+        return P
     def hip_swing(self,tau):
-        if tau < self.C_tau[0]:
-            tau_l = tau - self.C_tau[1] + 2*pi
-        elif tau > self.C_tau[1]:
-            tau_l = tau - self.C_tau[1]
+        if tau < C_tau_0:
+            tau_l = tau-C_tau_1+2*pi
+        elif tau > C_tau_1:
+            tau_l = tau-C_tau_1
         else:
             tau_l = 0
-
-        if (tau+pi) < self.C_tau[0]:
-            tau_r = tau - self.C_tau[1] + 3*pi
-        elif (tau+pi) > self.C_tau[1]:
-            tau_r = tau - self.C_tau[1] + pi
+        if (tau+pi) < C_tau_0:
+            tau_r = tau-C_tau_1+3*pi
+        elif (tau+pi) > C_tau_1:
+            tau_r = tau-C_tau_1+pi
         else:
             tau_r = 0
-        delta = self.C_tau[0] - self.C_tau[1] + 2*pi
-        P_hip_swing = self.C[16] * (sin(tau_l * pi/delta) - sin(tau_r * pi/delta))
-        return P_hip_swing
-
-        ##----------------Leaning--------------
-
+        delta = C_tau_0 - C_tau_1 + 2*pi
+        P = {'hipSwing':C17*(sin(tau_l*pi/delta)-sin(tau_r*pi/delta))}
+        return P
     def leaning(self,Vx,Vphi):
+        P = {}
         if Vx >= 0:
-            P_pitch_lean = Vx*self.C[17]
+            P['pitchLean'] = Vx*C18
         elif Vx < 0:
-            P_pitch_lean = Vx*self.C[18]
-        P_roll_lean = - Vphi * abs(Vx) * self.C[19]
-        return P_pitch_lean, P_roll_lean
-
-        ##--------------Final Motion-----------
-
+            P['pitchLean'] = Vx*C19
+        P['rollLean'] = -Vphi*abs(Vx)*C20
+        return P
     def final_motion(self,Vx,Vy,Vphi,tau,sigma):
-        P_eta_halt, P_LRoll_halt, P_LPitch_halt, P_FRoll_halt, P_FPitch_halt = self.halt_position(sigma)
-        P_Leg_lift = self.leg_lifting(tau,Vx,Vy)
-        P_pitch_LSwing, P_roll_LSwing, P_yaw_LSwing = self.leg_swing(tau,Vx,Vy,Vphi,sigma)
-        P_hip_swing = self.hip_swing(tau)
-        P_pitch_lean, P_roll_lean = self.leaning(Vx,Vphi)
+        P = {}
+        P.update(self.halt_position(sigma))
+        P.update(self.leg_lifting(tau,Vx,Vy))
+        P.update(self.leg_swing(tau,Vx,Vy,Vphi,sigma))
+        P.update(self.hip_swing(tau))
+        P.update(self.leaning(Vx,Vphi))
+        angles = {'eta':P['etaHalt']+P['legLift'],\
+                  'legRoll':P['legRollHalt']+P['hipSwing']+P['rollLegSwing']+P['rollLean'],\
+                  'legPitch':P['legPitchHalt']+P['pitchLegSwing']+P['pitchLean'],\
+                  'legYaw':P['yawLegSwing'],\
+                  'footRoll':P['footRollHalt'],\
+                  'footPitch':P['footPitchHalt']}
+        return angles
 
-        eta = P_eta_halt + P_Leg_lift
-        theta_roll_leg = P_LRoll_halt + P_hip_swing + P_roll_LSwing + P_roll_lean
-        theta_pitch_leg = P_LPitch_halt + P_pitch_LSwing + P_pitch_lean
-        theta_yaw_leg = P_yaw_LSwing
-        theta_roll_foot = P_FRoll_halt
-        theta_pitch_foot = P_FPitch_halt
-        return eta, theta_roll_leg, theta_pitch_leg, theta_yaw_leg, theta_roll_foot, theta_pitch_foot
