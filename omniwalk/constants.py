@@ -33,7 +33,7 @@ C22 = 0.0085 # Sagittal Acceleration
 C23 = 0.01 # Lateral Acceleration
 C24 = 0.009 # Rotational Acceleration
 
-C25 = 0.09 # Constant Step Frequency
+C25 = 0.03 # Constant Step Frequency
 C26 = 0.008 # Sagittal Proportional Step Frequency
 C27 = 0 # Lateral Proportional Step Frequency
 
