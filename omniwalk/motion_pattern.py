@@ -33,7 +33,7 @@ class MotionPattern:
         P['rollLegSwing'] = -gamma*Vy*C12 - sigma*max(C13*abs(Vx),C14*abs(Vphi))
         P['yawLegSwing'] = gamma*Vphi*C15 - sigma*C16*abs(Vphi)
         return P
-    def hip_swing(self,tau):
+    def hip_swing(self,tau,sigma):
         if tau < C_tau_0:
             tau_l = tau-C_tau_1+2*pi
         elif tau > C_tau_1:
@@ -47,7 +47,7 @@ class MotionPattern:
         else:
             tau_r = 0.0
         delta = C_tau_0 - C_tau_1 + 2*pi
-        P = {'hipSwing':C17*(sin(tau_l*pi/delta)-sin(tau_r*pi/delta))}
+        P = {'hipSwing':sigma*C17*(sin(tau_l*pi/delta)-sin(tau_r*pi/delta))}
         return P
     def leaning(self,Vx,Vphi):
         P = {}
@@ -57,17 +57,17 @@ class MotionPattern:
             P['pitchLean'] = Vx*C19
         P['rollLean'] = -Vphi*abs(Vx)*C20
         return P
-    def final_motion(self,Vx,Vy,Vphi,tau,sigma):
+    def final_motion(self,Vx,Vy,Vphi,tau,sigma,start):
         P = {}
         P.update(self.halt_position(sigma))
         P.update(self.leg_lifting(tau,Vx,Vy))
         P.update(self.leg_swing(tau,Vx,Vy,Vphi,sigma))
-        P.update(self.hip_swing(tau))
+        P.update(self.hip_swing(tau,sigma))
         P.update(self.leaning(Vx,Vphi))
-        angles = {'eta':P['etaHalt']+P['legLift'],\
-                  'legRoll':P['legRollHalt']+P['hipSwing']+P['rollLegSwing']+P['rollLean'],\
-                  'legPitch':P['legPitchHalt']+P['pitchLegSwing']+P['pitchLean'],\
-                  'legYaw':P['yawLegSwing'],\
+        angles = {'eta':P['etaHalt']+start*P['legLift'],\
+                  'legRoll':P['legRollHalt']+start*(P['hipSwing']+P['rollLegSwing']+P['rollLean']),\
+                  'legPitch':P['legPitchHalt']+start*(P['pitchLegSwing']+P['pitchLean']),\
+                  'legYaw':start*P['yawLegSwing'],\
                   'footRoll':P['footRollHalt'],\
                   'footPitch':P['footPitchHalt']}
         return angles
