@@ -63,7 +63,7 @@ class Sim:
         self.renderer.SetActiveCamera(self.camera)
         self.cameraFocus = [0.0, 0.0, 0.0]
         self.cameraPos = [4.0, 2.5, 1.5]
-        self.cameraOffset = [3.0,2.0,1.0]
+        self.cameraOffset = [0.0,1.0,3.0]
         self.cameraRoll = 0.0
         # Keep track of the simulated bodies and robots
         self.bodies = []
