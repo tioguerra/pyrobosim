@@ -1,8 +1,9 @@
 from math import *
 from numpy import *
+from constants import *
 
 class ControlInterface:
-    def __init__(self,C):
+    def __init__(self):
         self.Vx = 0
         self.Vy = 0
         self.Vphi = 0
@@ -10,15 +11,13 @@ class ControlInterface:
         self.Vx_max = 0
         self.Vy_max = 0
         self.Vphi_max = 0
-        self.C = []
-        for i in range(len(C)):
-            self.C.append(C[i])
+        self.start = 0
 
     def setVelocity(self,Vx,Vy,Vphi):
         self.Vx_max, self.Vy_max, self.Vphi_max = self.velocity_restriction(Vx,Vy,Vphi)
 
     def p_norm(self,Vx,Vy,Vphi):
-        V_norm = (Vx**self.C[0] + Vy**self.C[0] + Vphi**self.C[0])**(1/self.C[0])
+        V_norm = (abs(Vx)**C21 + abs(Vy)**C21 + abs(Vphi)**C21)**(1/C21)
         return V_norm
 
     def velocity_restriction(self,Vx,Vy,Vphi):
@@ -27,26 +26,28 @@ class ControlInterface:
             Vx = Vx/V_norm
             Vy = Vy/V_norm
             Vphi = Vphi/V_norm
-        else:
-            pass
         return Vx,Vy,Vphi
     
-    def velocity_incrementation(self):
-        self.Vx = self.Vx + max(-self.C[1],min(self.Vx_max - self.Vx, self.C[1]))
-        self.Vy = self.Vy + max(-self.C[2],min(self.Vy_max - self.Vy, self.C[2]))
-        self.Vphi = self.Vphi + max(-self.C[3],min(self.Vphi_max - self.Vphi, self.C[3]))
+    def velocity_increment(self):
+        self.Vx = self.Vx + max(-C22,min(self.Vx_max - self.Vx, C22))
+        self.Vy = self.Vy + max(-C23,min(self.Vy_max - self.Vy, C23))
+        self.Vphi = self.Vphi + max(-C24,min(self.Vphi_max - self.Vphi, C24))
 
     def motion_phase(self):
-        self.tau = self.tau + self.C[4] + abs(self.Vx)*self.C[5] + abs(self.Vy)*self.C[6]
+        self.tau = self.tau + C25 + abs(self.Vx)*C26 + abs(self.Vy)*C27
 
         if self.tau > pi:
             self.tau = self.tau - (2*pi)
-        else:
-            pass
         return self.tau
 
-    def full_controll(self,Vx,Vy,Vphi):
+    def start_increment(self):
+        if self.start <1.0:
+            self.start = self.start + C28
+
+    def full_control(self,Vx,Vy,Vphi):
         self.setVelocity(Vx,Vy,Vphi)
-        self.velocity_incrementation()
+        self.velocity_increment()
         self.motion_phase()
-        return self.Vx, self.Vy, self.Vphi, self.tau
+        self.start_increment()
+
+        return self.Vx, self.Vy, self.Vphi, self.tau, self.start
