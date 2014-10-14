@@ -13,7 +13,7 @@ s = Sim()
 # Create a robot 50cm above the ground
 # obs.: changing last argument to False
 #       allows it to fall
-r = BipedRobot(s, (0.0, 0.5, 0.0), True)
+r = BipedRobot(s, (0.0, 0.1, 0.0), False)
 
 # Create a controller
 c = UDPCtrlServer(s, r, sys.argv[1])
