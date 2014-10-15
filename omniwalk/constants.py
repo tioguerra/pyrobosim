@@ -24,7 +24,7 @@ C16 = 0.05 # Rotational Swing Amplitude Offset
 
 C17 = 0.020 # Lateral Hip Swing Amplitude
 
-C18 = 0.03 # Forward Lean
+C18 = 0.04 # Forward Lean
 C19 = 0 # Backward Lean
 C20 = -0.07 # Forward and Turning Lean
 
