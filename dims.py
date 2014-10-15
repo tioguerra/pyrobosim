@@ -43,7 +43,7 @@ GRAVITY = (0, -9.81, 0)
 ERP = 0.8 # make this as large as possible
 CFM = 0.00001 # make this as small as possible
 BOUNCE = 0.1
-MU = 25.0
+MU = 55.0
 
 WINDOW_WIDTH = 1024
 WINDOW_HEIGHT = 768
@@ -52,7 +52,7 @@ FLOOR_IMAGE = 'images/floor.jpg'
 ROBOT_IMAGE = 'images/rough.jpg'
 
 # Torque in N.m
-MAX_KNEE_TORQUE = 50.0
+MAX_KNEE_TORQUE = 150.0
 MAX_ANKLE_TORQUE = 150.0
 MAX_HIP_TORQUE = 50.0
 
@@ -64,9 +64,9 @@ QMAX_HIP_TORQUE = 50.0
 
 HIPROLL_PID = 50.0, 10.0, 4.50  #25.0, 15.0, 2.50
 HIPTILT_PID = 50.0, 10.0, 2.50  #25.0, 15.0, 2.50
-HIPYAW_PID = 50.0, 10.0, 2.50    #15.0, 2.5, 0.5
-KNEE_PID = 70.0, 10.0, 2.50
-ANKLE_PID = 90.0, 10.0, 1.40    #50.0,10.0,1.0
+HIPYAW_PID = 50.0, 10.0, 2.50    #15.0, 2.50, 0.50
+KNEE_PID = 150.0, 10.0, 2.50    #150, 10.0, 2.50
+ANKLE_PID = 150.0, 10.0, 1.40    #50.0, 10.0, 1.00
 
 QHIPROLL_PID = 20.0, 10.0, 0.50
 QHIPYAW_PID = 20.0, 10.0, 0.50
