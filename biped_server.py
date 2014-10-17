@@ -10,7 +10,7 @@ if len(sys.argv) != 2:
 # Create a simulation
 s = Sim()
 
-# Create a robot 50cm above the ground
+# Create a robot above the ground
 # obs.: changing last argument to False
 #       allows it to fall
 r = BipedRobot(s, (0.0, 0.1, 0.0), False)
