@@ -68,9 +68,9 @@ HIPYAW_PID = 50.0, 10.0, 2.50    #15.0, 2.50, 0.50
 KNEE_PID = 150.0, 10.0, 2.50    #150, 10.0, 2.50
 ANKLE_PID = 150.0, 10.0, 1.40    #50.0, 10.0, 1.00
 
-QHIPROLL_PID = 20.0, 10.0, 0.50
-QHIPYAW_PID = 20.0, 10.0, 0.50
-QKNEE_PID = 20.0, 10.0, 0.50
+QHIPROLL_PID = 50.0, 10.0, 2.50
+QHIPYAW_PID = 50.0, 10.0, 2.50
+QKNEE_PID = 50.0, 10.0, 2.50
 
 EPS = 2e-52 # http://www.mathworks.com/help/techdoc/ref/eps.html
 

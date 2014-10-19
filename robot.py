@@ -190,11 +190,11 @@ class QuadrupedRobot:
     def setFrontLeftKnee(self,target):
         self.frontLeftLeg.kneeServo.setTarget(-target)
     def setFrontRightKnee(self,target):
-        self.frontRightLeg.kneeServo.setTarget(-target)
+        self.frontRightLeg.kneeServo.setTarget(target)
     def setBackLeftKnee(self,target):
         self.backLeftLeg.kneeServo.setTarget(-target)
     def setBackRightKnee(self,target):
-        self.backRightLeg.kneeServo.setTarget(-target)
+        self.backRightLeg.kneeServo.setTarget(target)
     def setTargets(self, targets):
         if 'flHipRoll' in targets:
             self.setFrontLeftHipRoll(targets['flHipRoll'])
@@ -239,11 +239,11 @@ class QuadrupedRobot:
     def getFrontLeftKnee(self):
         return -self.frontLeftLeg.kneeServo.readAngle()
     def getFrontRightKnee(self):
-        return -self.frontRightLeg.kneeServo.readAngle()
+        return self.frontRightLeg.kneeServo.readAngle()
     def getBackLeftKnee(self):
         return -self.backLeftLeg.kneeServo.readAngle()
     def getBackRightKnee(self):
-        return -self.backRightLeg.kneeServo.readAngle()
+        return self.backRightLeg.kneeServo.readAngle()
     def readIMU(self):
         return self.trunk.readIMU()
     def readTiltSensor(self):
