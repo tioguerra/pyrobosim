@@ -13,8 +13,8 @@ s = Sim()
 # Create a robot 50cm above the ground
 # obs.: changing last argument to False
 #       allows it to fall
-r = BipedRobot(s, (0.0, 0.5, 0.0), True)
-
+r = BipedRobot(s, (0.0, 0.0, 0.0), False)
+#r.setTargets({'lAnkleRoll': -0.07, 'rKnee': -0.40066968464623937, 'rAnkleTilt':0.23033484232311968, 'lAnkleTilt': 0.23033484232311968, 'lHipRoll': -0.1,'rHipRoll': 0.1, 'lHipTilt': 0.18033484232311969, 'lKnee':-0.40066968464623937, 'rHipYaw': 0.0, 'lHipYaw': 0.0, 'rAnkleRoll': -0.07,'rHipTilt': 0.18033484232311969})
 # Create a controller
 c = UDPCtrlServer(s, r, sys.argv[1])
 
