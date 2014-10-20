@@ -22,6 +22,7 @@ background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((250,250,250))
 font = pygame.font.SysFont("arial", 24)
+clk = pygame.time.Clock()
 
 #Init walking modules
 control = ControlInterface()
@@ -91,6 +92,6 @@ while not quit:
     if r is not None and 'tilt' in r:
         print 'Tilt sensor reading: %+.3f' % r['tilt']
 
-    time.sleep(0.005)
+    clk.tick(52)
     pygame.display.update()
 
