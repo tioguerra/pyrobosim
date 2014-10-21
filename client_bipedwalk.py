@@ -41,17 +41,17 @@ while not quit:
         #defines keyboard velocity controls
         elif e.type == KEYDOWN:
             if e.key == K_w:
-                VX = VX + 0.025
+                VX = VX + 0.25
             if e.key == K_s:
-                VX = VX - 0.025
+                VX = VX - 0.25
             if e.key == K_a:
-                VY = VY + 0.025
+                VY = VY + 0.25
             if e.key == K_d:
-                VY = VY - 0.025
+                VY = VY - 0.25
             if e.key == K_q:
-                VPHI = VPHI + 0.025
+                VPHI = VPHI + 0.25
             if e.key == K_e:
-                VPHI = VPHI - 0.025
+                VPHI = VPHI - 0.25
 
     #renders the velocities to the pygame screen
     VXText = font.render("VX = %1.3f" %VX, True, (10,10,10))
@@ -92,6 +92,6 @@ while not quit:
     if r is not None and 'tilt' in r:
         print 'Tilt sensor reading: %+.3f' % r['tilt']
 
-    clk.tick(52)
+    clk.tick(30)
     pygame.display.update()
 

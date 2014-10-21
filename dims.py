@@ -45,8 +45,8 @@ CFM = 0.00001 # make this as small as possible
 BOUNCE = 0.1
 MU = 55.0
 
-WINDOW_WIDTH = 1024
-WINDOW_HEIGHT = 768
+WINDOW_WIDTH = 640
+WINDOW_HEIGHT = 480
 
 FLOOR_IMAGE = 'images/floor.jpg'
 ROBOT_IMAGE = 'images/rough.jpg'
@@ -63,10 +63,10 @@ QMAX_HIP_TORQUE = 50.0
 # PID gains
 
 HIPROLL_PID = 50.0, 10.0, 4.50  #25.0, 15.0, 2.50
-HIPTILT_PID = 50.0, 10.0, 2.50  #25.0, 15.0, 2.50
+HIPTILT_PID = 50.0, 10.0, 3.50  #25.0, 15.0, 2.50
 HIPYAW_PID = 50.0, 10.0, 2.50    #15.0, 2.50, 0.50
 KNEE_PID = 150.0, 10.0, 2.50    #150, 10.0, 2.50
-ANKLE_PID = 150.0, 10.0, 1.40    #50.0, 10.0, 1.00
+ANKLE_PID = 150.0, 10.0, 1.50    #50.0, 10.0, 1.00
 
 QHIPROLL_PID = 50.0, 10.0, 2.50
 QHIPYAW_PID = 50.0, 10.0, 2.50
