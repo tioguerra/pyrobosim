@@ -5,6 +5,7 @@ from controller import UDPCtrlClient
 from omniwalk import *
 import pygame
 from pygame.locals import *
+import matplotlib.pyplot as plt
 
 # checks for command line arguments
 if len(sys.argv) != 4:
@@ -13,6 +14,10 @@ if len(sys.argv) != 4:
 
 # creates the UDP client interface
 c = UDPCtrlClient(sys.argv[1], sys.argv[2], sys.argv[3])
+
+
+#plotting
+#angle = []
 
 # Init PyGame
 pygame.init()
@@ -28,6 +33,7 @@ clk = pygame.time.Clock()
 control = ControlInterface()
 motion = MotionPattern()
 leg = LegInterface()
+state = StateEstimation()
 
 VX = 0.0
 VY = 0.0
@@ -41,17 +47,17 @@ while not quit:
         #defines keyboard velocity controls
         elif e.type == KEYDOWN:
             if e.key == K_w:
-                VX = VX + 0.25
+                VX = VX + 0.05
             if e.key == K_s:
-                VX = VX - 0.25
+                VX = VX - 0.05
             if e.key == K_a:
-                VY = VY + 0.25
+                VY = VY + 0.05
             if e.key == K_d:
-                VY = VY - 0.25
+                VY = VY - 0.05
             if e.key == K_q:
-                VPHI = VPHI + 0.25
+                VPHI = VPHI + 0.05
             if e.key == K_e:
-                VPHI = VPHI - 0.25
+                VPHI = VPHI - 0.05
 
     #renders the velocities to the pygame screen
     VXText = font.render("VX = %1.3f" %VX, True, (10,10,10))
@@ -65,10 +71,10 @@ while not quit:
     Vx,Vy,Vphi,tau,start = control.full_control(VX,VY,VPHI)
     # calculates angles for the left leg
     angles = motion.final_motion(Vx,Vy,-Vphi, tau, 1, start)
-    rightJointAngles = leg.joint_angles(angles,1)
+    rightJointAngles = leg.joint_angles(angles,-1)
     # calculates angles for the right leg
     angles = motion.final_motion(Vx,Vy,Vphi,(tau+2*pi) % (2*pi) - pi, -1, start)
-    leftJointAngles = leg.joint_angles(angles,-1)
+    leftJointAngles = leg.joint_angles(angles,1)
 
     # prepare the omniwalk commands to be sent
     # to the server
@@ -88,10 +94,17 @@ while not quit:
     # sends the desired target angles to server, and
     # receive back in r all the current sensor readings
     r = c.sendCommand(command)
+    
+    #angle.append(command['lHipTilt'])
+
     # prints the tilt sensor reading
     if r is not None and 'tilt' in r:
         print 'Tilt sensor reading: %+.3f' % r['tilt']
 
+    state.foot_position(r)
+
     clk.tick(30)
     pygame.display.update()
 
+#plt.plot(angle)
+#plt.show()
