@@ -277,8 +277,8 @@ class BipedRobot:
         self.sim = sim
         self.sim.addRobot(self)
         # Create the legs
-        self.rightLeg = BipedLeg(sim,(x, y, z), 1.0)
-        self.leftLeg = BipedLeg(sim,(x, y, z), -1.0)
+        self.rightLeg = BipedLeg(sim,(x, y, z),-1.0)
+        self.leftLeg = BipedLeg(sim,(x, y, z),  1.0)
         # Create the trunk
         self.trunk = Link(sim,\
             (x+TRUNK_JPOS[0],\
@@ -287,7 +287,7 @@ class BipedRobot:
             (TRUNK_LX, TRUNK_LY, TRUNK_LZ),\
             DENSITY, fixed)
         # Create left hip joints
-        self.lhipPosition = (x-1*(FOOT_JPOS[0]+LEG_GAP/2.0),\
+        self.lhipPosition = (x+1*(FOOT_JPOS[0]+LEG_GAP/2.0),\
                              FOOT_LY+LLEG_LY+ULEG_LY+y,\
                              z+TRUNK_JPOS[2])
         self.lhipJointBody1 = ode.Body(sim.world) # intermediate massless body
@@ -313,7 +313,7 @@ class BipedRobot:
         self.lhipYaw.setAnchor(self.lhipPosition)
         self.lhipYaw.setAxis((0,1,0))
         # Create right hip joints
-        self.rhipPosition = (x+1*(FOOT_JPOS[0]+LEG_GAP/2.0),\
+        self.rhipPosition = (x-1*(FOOT_JPOS[0]+LEG_GAP/2.0),\
                              FOOT_LY+LLEG_LY+ULEG_LY+y,\
                              z+TRUNK_JPOS[2])
         self.rhipJointBody1 = ode.Body(sim.world) # intermediate massless body
