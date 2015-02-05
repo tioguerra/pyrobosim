@@ -64,7 +64,47 @@ class StateEstimation:
             else:
                 rightLegPos = dot(R,V)
                 print rightLegPos
-            return
+        return
+    def inverted_matrix(self,r):
+        a = cos(r['roll'])*cos(theta_y)*cos(theta_pl) - cos(r['tilt'])*sin(r['roll'])*cos(theta_y)*sin(theta_pl) \
+            - sin(r['tilt'])*sin(r['roll'])*cos(theta_x)*sin(theta_y) - cos(r['roll'])*sin(theta_x)*sin(theta_y)*sin(theta_pl) \
+            - cos(r['tilt'])*sin(r['roll'])*cos(theta_pl)*sin(theta_x)*sin(theta_y)
+        b = cos(r['roll'])*cos(theta_pl)*sin(theta_y) + sin(r['tilt'])*sin(r['roll'])*cos(theta_x)*cos(theta_y) \
+            - cos(r['tilt'])*sin(r['roll'])*sin(theta_y)*sin(theta_pl) + cos(r['roll'])*cos(theta_y)*sin(theta_x)*sin(theta_pl) \
+            + cos(r['tilt'])*sin(r['roll'])*cos(theta_y)*cos(theta_pl)*sin(theta_x)
+        c = sin(r['tilt'])*sin(r['roll'])*sin(theta_x) - cos(r['roll'])*cos(theta_x)*sin(theta_pl) - cos(r['tilt'])*sin(r['roll'])*cos(theta_x)*cos(theta_pl)
+        d = eta*cos(r['tilt'])*sin(r['roll']) + (TRUNK_LY/2)*sin(r['tilt'])*sin(r['roll'])*sin(theta_x) - z_value*sin(r['tilt'])*sin(r['roll'])*sin(theta_x) \
+            - (TRUNK_LY/2)*cos(r['roll'])*cos(theta_x)*sin(theta_pl) + z_value*cos(r['roll'])*cos(theta_x)*sin(theta_pl) \
+            - lamda*ty*cos(r['roll'])*cos(theta_pl)*sin(theta_y) - (TRUNK_LY/2)*cos(r['tilt'])*sin(r['roll'])*cos(theta_x)*cos(theta_pl) \
+            + z_value*cos(r['tilt'])*sin(r['roll'])*cos(theta_x)*cos(theta_pl) - lamda*ty*sin(r['tilt'])*sin(r['roll'])*cos(theta_x)*cos(theta_y) \
+            + lamda*ty*cos(r['tilt'])*sin(r['roll'])*sin(theta_y)*sin(theta_pl) - lamda*ty*cos(r['roll'])*cos(theta_y)*sin(theta_x)*sin(theta_pl) \
+            - lamda*ty*cos(r['tilt'])*sin(r['roll'])*cos(theta_y)*cos(theta_pl)*sin(theta_x)
+        e = sin(r['tilt'])*cos(theta_y)*sin(theta_pl) - cos(r['tilt'])*cos(theta_x)*sin(theta_y) + sin(r['tilt'])*cos(theta_pl)*sin(theta_x)*sin(theta_y)
+        f = cos(r['tilt'])*cos(theta_x)*cos(theta_y) + sin(r['tilt'])*sin(theta_y)*sin(theta_pl) - sin(r['tilt'])*cos(theta_y)*cos(theta_pl)*sin(theta_x)
+        g = cos(r['tilt'])*sin(theta_x) + sin(r['tilt'])*cos(theta_x)*cos(theta_pl)
+        h = (TRUNK_LY/2)*cos(r['tilt'])*sin(theta_x) - eta*sin(r['tilt']) - z_value*cos(r['tilt'])*sin(theta_x) + (TRUNK_LY2)*sin(r['tilt'])*cos(theta_x)*cos(theta_pl) \
+            - z_value*sin(r['tilt'])*cos(theta_x)*cos(theta_pl) - lamda*ty*cos(r['tilt'])*cos(theta_x)*cos(theta_y) \
+            - lamda*ty*sin(r['tilt'])*sin(theta_y)*sin(theta_pl) + lamda*ty*sin(r['tilt'])*cos(theta_y)*cos(theta_pl)*sin(theta_x)
+        i = sin(r['roll'])*cos(theta_y)*cos(theta_pl) + cos(r['tilt'])*cos(r['roll'])*cos(theta_y)*sin(theta_pl) \
+            + cos(r['roll'])*sin(r['tilt'])*cos(theta_x)*sin(theta_y) - sin(r['roll'])*sin(theta_x)*sin(theta_y)*sin(theta_pl) \
+            + cos(r['tilt'])*cos(r['roll'])*cos(theta_pl)*sin(theta_x)*sin(theta_y)
+        j = sin(r['roll'])*cos(theta_pl)*sin(theta_y) - cos(r['roll'])*sin(r['tilt'])*cos(theta_x)*cos(theta_y) + \
+            cos(r['tilt'])*cos(r['roll'])*sin(theta_y)*sin(theta_pl) + sin(r['roll'])*cos(theta_y)*sin(theta_x)*sin(theta_pl) \
+            - cos(r['tilt'])*cos(r['roll'])*cos(theta_y)*cos(theta_pl)*sin(theta_x)
+        k = cos(r['tilt'])*cos(r['roll'])*cos(theta_x)*cos(theta_pl) - sin(r['roll'])*cos(theta_x)*sin(theta_pl) - cos(r['roll'])*sin(r['tilt'])*sin(theta_x)
+        l = z_value*cos(r['roll'])*sin(r['tilt'])*sin(theta_x) - (TRUNK_LY/2)*cos(r['roll'])*sin(r['tilt'])*sin(theta_x) - eta*cos(r['tilt'])*cos(r['roll']) \
+            - (TRUNK_LY/2)*sin(r['roll'])*cos(theta_x)*sin(theta_pl) + z_value*sin(r['roll'])*cos(theta_x)*sin(theta_pl) \
+            - lamda*ty*sin(r['roll'])*cos(theta_pl)*sin(theta_y) + (TRUNK_LY/2)*cos(r['tilt'])*cos(r['roll'])*cos(theta_x)*cos(theta_pl) \
+            - z_value*cos(r['tilt'])*cos(r['roll'])*cos(theta_x)*cos(theta_pl) + lamda*ty*cos(r['roll'])*sin(r['tilt'])*cos(theta_x)*cos(theta_y) \
+            - lamda*ty*cos(r['tilt'])*cos(r['roll'])*sin(theta_y)*sin(theta_pl) - lamda*ty*sin(r['roll'])*cos(theta_y)*sin(theta_x)*sin(theta_pl) \
+            + lamda*ty*cos(r['tilt'])*cos(r['roll'])*cos(theta_y)*cos(theta_pl)*sin(theta_x)
+
+        R = array([[a, b, c, d,], \
+                   [e, f, g, h,], \
+                   [i, j, k, l,], \
+                   [0, 0, 0, 1]])
+
+        V = array([[0, 0, 0, 1]]) 
 
     def foot_position(self, r):
         leg = legLength(r)
