@@ -16,8 +16,9 @@ if len(sys.argv) != 4:
 c = UDPCtrlClient(sys.argv[1], sys.argv[2], sys.argv[3])
 
 
-#plotting
+##plotting
 #angle = []
+#angleFeedback = []
 
 # Init PyGame
 pygame.init()
@@ -33,7 +34,7 @@ clk = pygame.time.Clock()
 control = ControlInterface()
 motion = MotionPattern()
 leg = LegInterface()
-state = StateEstimation()
+#state = StateEstimation()  ## Closed loop module object
 
 VX = 0.0
 VY = 0.0
@@ -94,17 +95,22 @@ while not quit:
     # sends the desired target angles to server, and
     # receive back in r all the current sensor readings
     r = c.sendCommand(command)
-    
-    #angle.append(command['lHipTilt'])
-
+   
     # prints the tilt sensor reading
     if r is not None and 'tilt' in r:
         print 'Tilt sensor reading: %+.3f' % r['tilt']
 
-    state.foot_position(r)
+        ## Plotting list of angles
+        #angleFeedback.append(r['lAnkleTilt'])
+        #angle.append(command['lAnkleTilt'])
+
+    ## Closed loop state acquisition
+    #state.foot_position(r)
 
     clk.tick(30)
     pygame.display.update()
 
+## Plot commands for joint analysis
 #plt.plot(angle)
+#plt.plot(angleFeedback)
 #plt.show()
